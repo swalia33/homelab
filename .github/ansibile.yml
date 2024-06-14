@@ -28,6 +28,9 @@ jobs:
 
       - name: Run Ansible playbook
         run: ansible-playbook ansible/playbooks/main.yml
+        
+      - name: Run Ansible playbook
+        run: ansible-playbook -i ansible/inventory/hosts.yml ansible/playbooks/main.yml
 
       - name: Decrypt Ansible Vault
         run: ansible-vault decrypt ansible/secrets.yml --vault-password-file .vault_pass.txt
