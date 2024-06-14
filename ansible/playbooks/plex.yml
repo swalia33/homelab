@@ -1,0 +1,45 @@
+---
+- name: Install Plex Media Server
+  hosts: all
+  become: yes
+  vars:
+    plex_version: "plexmediaserver_1.26.2.5797-5bd057d2f_amd64.deb"
+    plex_url: "https://downloads.plex.tv/plex-media-server-new/1.26.2.5797-5bd057d2f/debian/plexmediaserver_1.26.2.5797-5bd057d2f_amd64.deb"
+  tasks:
+    - name: Ensure the system is up to date
+      apt:
+        update_cache: yes
+        upgrade: dist
+
+    - name: Install required dependencies
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Download Plex Media Server package
+      get_url:
+        url: "{{ plex_url }}"
+        dest: "/tmp/{{ plex_version }}"
+
+    - name: Install Plex Media Server package
+      apt:
+        deb: "/tmp/{{ plex_version }}"
+        state: present
+
+    - name: Ensure Plex Media Server is started and enabled
+      systemd:
+        name: plexmediaserver
+        state: started
+        enabled: yes
+
+    - name: Allow Plex Media Server through the firewall
+      ufw:
+        rule: allow
+        proto: tcp
+        port: 32400
+        comment: "Allow Plex Media Server"
