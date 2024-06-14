@@ -1,4 +1,7 @@
-# ansible/inventory/hosts.ini
+# ansible/inventory/hosts.yml
 
-[plex_server]
-192.168.50.189 ansible_user=swalia ansible_ssh_private_key_file=~/.ssh/id_rsa
+all:
+  hosts:
+    192.168.50.189:
+      ansible_user: swalia
+      ansible_ssh_private_key_file: /home/swalia/.ssh/id_rsa
